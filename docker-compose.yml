@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  markitdown-pwa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: markitdown_pwa_app
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - MAX_FILE_SIZE_MB=50
+      - MAX_BATCH_FILES=20
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:8000,http://127.0.0.1:5173,http://127.0.0.1:8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
